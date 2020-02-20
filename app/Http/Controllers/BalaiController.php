@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Paket;
 use Illuminate\Http\Request;
 
-class PaketController extends Controller
+class BalaiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -36,8 +35,8 @@ class PaketController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nmpaket' => 'required|min:3',
-            'pagurmp' => 'required'
+            'nmbalai' => 'required|min:3',
+            'image' => 'required|image|mimes:jpeg,png,jpg'
         ]);
         dd($request->all());
     }
@@ -45,10 +44,10 @@ class PaketController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Paket  $paket
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Paket $paket)
+    public function show($id)
     {
         //
     }
@@ -56,10 +55,10 @@ class PaketController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Paket  $paket
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Paket $paket)
+    public function edit($id)
     {
         //
     }
@@ -68,10 +67,10 @@ class PaketController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Paket  $paket
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Paket $paket)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -79,10 +78,10 @@ class PaketController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Paket  $paket
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Paket $paket)
+    public function destroy($id)
     {
         //
     }

@@ -72760,13 +72760,13 @@ var routes = [{
   path: "/balai",
   name: "balai",
   component: function component() {
-    return __webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*! ./views/Balai.vue */ "./resources/js/views/Balai.vue"));
+    return Promise.all(/*! import() */[__webpack_require__.e(1), __webpack_require__.e(4)]).then(__webpack_require__.bind(null, /*! ./views/Balai.vue */ "./resources/js/views/Balai.vue"));
   }
 }, {
   path: "/paket",
   name: "paket",
   component: function component() {
-    return __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*! ./views/Paket.vue */ "./resources/js/views/Paket.vue"));
+    return Promise.all(/*! import() */[__webpack_require__.e(1), __webpack_require__.e(2)]).then(__webpack_require__.bind(null, /*! ./views/Paket.vue */ "./resources/js/views/Paket.vue"));
   }
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
@@ -72848,8 +72848,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Dev\Laravue\oneui_laravel_vue\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Dev\Laravue\oneui_laravel_vue\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Code\vue\pakistan_vue\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Code\vue\pakistan_vue\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

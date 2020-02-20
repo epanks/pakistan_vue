@@ -37,6 +37,7 @@
                                 <th>Satuan Output</th>
                                 <th>Outcome</th>
                                 <th>Satuan Outcome</th>
+                                <th>Lampiran</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -89,7 +90,8 @@
                             class="form-control"
                             id="nmpaket"
                             placeholder="Nama Paket"
-                        />
+                        >
+                        <!-- <div class="invalid-feedback" v-if="errors.nmpaket"></div> -->
                     </div>
                     <div class="form-group">
                         <label for="pagurmp">Pagu Paket</label>
@@ -132,13 +134,27 @@
                         />
                     </div>
                     <div class="form-group">
-                        <label for="trgoutcome">Satuan Outcome</label>
+                        <label for="satoutcome">Satuan Outcome</label>
                         <input
                             type="text"
-                            v-model="paketData.trgoutcome"
+                            v-model="paketData.satoutcome"
                             class="form-control"
-                            id="trgoutcome"
+                            id="satoutcome"
                             placeholder="Satuan Outcome"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="lampiran">Pilih Lampiran</label>
+                        <div v-if="paketData.lampiran.name">
+                            <img src="" ref="newPaketLampiranDisplay" class="w-150px">
+                        </div>
+                        <input
+                            type="file"
+                            v-on:change="attachLampiran"
+                            ref="newPaketLampiran"
+                            class="form-control"
+                            id="lampiran"
+                            placeholder="Lampiran"
                         />
                     </div>
                     <hr />
@@ -161,6 +177,7 @@
 </template>
 
 <script>
+import * as paketService from '../services/paket_service';
 export default {
     name: "paket",
     data() {
@@ -171,19 +188,43 @@ export default {
                 trgoutput: "",
                 satoutput: "",
                 trgoutcome: "",
-                satourcome: ""
+                satoutcome: "",
+                lampiran: ""
             }
         };
     },
     methods: {
+        attachLampiran() {
+            this.paketData.lampiran = this.$refs.newPaketLampiran.files[0];
+            let reader = new FileReader();
+            reader.addEventListener('load', function() {
+                this.$refs.newPaketLampiranDisplay.src = reader.result;
+            }.bind(this), false);
+
+            reader.readAsDataURL(this.paketData.lampiran);
+        },
         hideNewPaketModal() {
             this.$refs.newPaketModal.hide();
         },
         showNewPaketModal() {
             this.$refs.newPaketModal.show();
         },
-        createPaket() {
-            console.log("form submitted");
+        createPaket: async function() {
+            let formData = new FormData();
+            formData.append('nmpaket', this.paketData.nmpaket);
+            formData.append('pagurmp', this.paketData.pagurmp);
+            formData.append('trgoutput', this.paketData.trgoutput);
+            formData.append('satoutput', this.paketData.satoutput);
+            formData.append('trgoutcome', this.paketData.trgoutcome);
+            formData.append('satoutcome', this.paketData.satoutcome);
+            formData.append('lampiran', this.paketData.lampiran);
+
+            try {
+                const response = await paketService.createPaket(formData);
+                console.log(response);
+            } catch (error) {
+                alert('some error');
+            }
         }
     }
 };
