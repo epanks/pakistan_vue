@@ -13,7 +13,8 @@ class BalaiController extends Controller
      */
     public function index()
     {
-        //
+        $balai = Balai::paginate(10);
+        return response()->json($balai, 200);
     }
 
     /**
@@ -35,9 +36,21 @@ class BalaiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nmbalai' => 'required|min:3',
+            'nmbalai' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg'
         ]);
+
+        $balai = new Balai();
+        $balai->nmbalai = $request->nmbalai;
+        $path = $request->file('image')->store('balai_images');
+        $balai->image = $path;
+
+        if ($balai->save()) {
+            return response()->json($balai, 200);
+        } else {
+            return response()->json($balai, 500);
+        }
+
         dd($request->all());
     }
 

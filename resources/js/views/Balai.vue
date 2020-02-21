@@ -30,6 +30,7 @@
                     >
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Nama Balai</th>
                                 <th>Image</th>
                                 <th>Action</th>
@@ -37,15 +38,17 @@
                         </thead>
                         <tfoot>
                             <tr>
+                                <th>ID</th>
                                 <th>Nama Balai</th>
                                 <th>Image</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            <tr>
-                                <td>Donna Snider</td>
-                                <td>Customer Support</td>
+                            <tr v-for="(balai, index) in balai" :key="index">
+                                <td>{{ balai.id }}</td>
+                                <td>{{ balai.nmbalai }}</td>
+                                <td>{{ balai.image }}</td>
                                 <td>
                                     <button class="btn btn-primary btn-sm">
                                         <span class="fa fa-edit"></span>
@@ -74,13 +77,19 @@
                             class="form-control"
                             id="nmbalai"
                             placeholder="Nama balai"
-                        >
-                        <div class="invalid-feedback" v-if="errors.nmbalai">{{errors.nmbalai}}</div>
-                    </div>                    
+                        />
+                        <div class="invalid-feedback" v-if="errors.nmbalai">
+                            {{ errors.nmbalai[0] }}
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="image">Pilih Image</label>
                         <div v-if="balaiData.image.name">
-                            <img src="" ref="newBalaiImageDisplay" class="w-150px">
+                            <img
+                                src=""
+                                ref="newBalaiImageDisplay"
+                                class="w-150px"
+                            />
                         </div>
                         <input
                             type="file"
@@ -88,9 +97,10 @@
                             ref="newBalaiImage"
                             class="form-control"
                             id="image"
-                        >
-                        <div class="invalid-feedback" v-if="errors.image">{{errors.image[0]}}</div>
-
+                        />
+                        <div class="invalid-feedback" v-if="errors.image">
+                            {{ errors.image[0] }}
+                        </div>
                     </div>
                     <hr />
                     <div class="text-right">
@@ -111,24 +121,46 @@
     </div>
 </template>
 <script>
-import * as balaiService from '../services/balai_service';
+import * as balaiService from "../services/balai_service";
 export default {
     name: "balai",
     data() {
         return {
+            balai: [],
             balaiData: {
                 nmbalai: "",
                 image: ""
-            }
-        }
+            },
+            errors: {}
+        };
+    },
+    mounted() {
+        this.loadBalai();
     },
     methods: {
+        loadBalai: async function() {
+            try {
+                const response = await balaiService.loadBalai();
+                console.log(response);
+                this.balai = response.data.data;
+                console.log(this.balai);
+            } catch (error) {
+                this.flashMessage.error({
+                    message: "Ada kesalahan ulangi lagi!",
+                    time: 5000
+                });
+            }
+        },
         attachImage() {
             this.balaiData.image = this.$refs.newBalaiImage.files[0];
             let reader = new FileReader();
-            reader.addEventListener('load', function() {
-                this.$refs.newBalaiImageDisplay.src = reader.result;
-            }.bind(this), false);
+            reader.addEventListener(
+                "load",
+                function() {
+                    this.$refs.newBalaiImageDisplay.src = reader.result;
+                }.bind(this),
+                false
+            );
 
             reader.readAsDataURL(this.balaiData.image);
         },
@@ -140,21 +172,29 @@ export default {
         },
         createBalai: async function() {
             let formData = new FormData();
-            formData.append('nmbalai', this.balaiData.nmbalai);
-            formData.append('image', this.balaiData.image);
+            formData.append("nmbalai", this.balaiData.nmbalai);
+            formData.append("image", this.balaiData.image);
 
             try {
                 const response = await balaiService.createBalai(formData);
                 console.log(response);
-            } catch (error) {                
+                this.hideNewBalaiModal();
+                this.flashMessage.success({
+                    message: "Balai telah di buat!",
+                    time: 5000
+                });
+            } catch (error) {
                 switch (error.response.status) {
                     case 422:
                         this.errors = error.response.data.errors;
-                        break;                    
-                    default:
-                        alert('Some error occurred');
                         break;
-                };
+                    default:
+                        this.flashMessage.error({
+                            message: "Ada kesalahan ulangi lagi!",
+                            time: 5000
+                        });
+                        break;
+                }
             }
         }
     }
